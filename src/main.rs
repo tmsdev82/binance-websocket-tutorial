@@ -26,6 +26,9 @@ fn main() {
         let parsed_data: serde_json::Value =
             serde_json::from_str(&msg).expect("Unable to parse message");
 
-        println!("{:?}", parsed_data);
+        println!(
+            "best ask: {}, ask size: {}",
+            parsed_data["asks"][0][0], parsed_data["asks"][0][1]
+        );
     }
 }
