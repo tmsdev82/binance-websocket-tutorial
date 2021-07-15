@@ -24,3 +24,9 @@ where
     let str_val = String::deserialize(deserializer)?;
     str_val.parse::<f32>().map_err(de::Error::custom)
 }
+
+#[derive(Debug, Deserialize)]
+pub struct DepthStreamWrapper {
+    pub stream: String,
+    pub data: DepthStreamData,
+}

@@ -5,7 +5,10 @@ mod models;
 
 static BINANCE_WS_API: &str = "wss://stream.binance.com:9443";
 fn main() {
-    let binance_url = format!("{}/ws/ethbtc@depth5@100ms", BINANCE_WS_API);
+    let binance_url = format!(
+        "{}/stream?streams=ethbtc@depth5@100ms/bnbeth@depth5@100ms",
+        BINANCE_WS_API
+    );
     let (mut socket, response) =
         connect(Url::parse(&binance_url).unwrap()).expect("Can't connect.");
 
@@ -25,11 +28,11 @@ fn main() {
             }
         };
 
-        let parsed: models::DepthStreamData = serde_json::from_str(&msg).expect("Cant parse");
-        for i in 0..parsed.asks.len() {
+        let parsed: models::DepthStreamWrapper = serde_json::from_str(&msg).expect("Can't parse");
+        for i in 0..parsed.data.asks.len() {
             println!(
-                "{}. ask: {}, size: {}",
-                i, parsed.asks[i].price, parsed.asks[i].size
+                "{}: {}. ask: {}, size: {}",
+                parsed.stream, i, parsed.data.asks[i].price, parsed.data.asks[i].size
             );
         }
     }
